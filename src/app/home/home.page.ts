@@ -564,11 +564,11 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   updateColorsByTime() {
-    if (this.dayPercentage < 50 && this.dayPercentage > 25) {
+    if (this.dayPercentage < 64 && this.dayPercentage > 25) {
       this.changeGlowColor("#3880ff");
     } else if (this.dayPercentage > 75) {
       this.changeGlowColor("#ffcb2200");
-    } else if (this.dayPercentage > 49 || this.dayPercentage < 76) {
+    } else if (this.dayPercentage > 65 || this.dayPercentage < 76) {
       this.changeGlowColor("#ff2277");
     }
   }
