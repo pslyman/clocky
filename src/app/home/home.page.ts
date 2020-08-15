@@ -18,8 +18,8 @@ export class HomePage implements OnInit, AfterViewInit {
   @ViewChild("container", { static: true }) container: ElementRef;
   @ViewChild("daddy", { static: true }) daddy: ElementRef;
   @ViewChild("dayCurve", { static: true }) dayCurve: ElementRef;
-  @ViewChild("skySphere", {static: true}) skySphere: ElementRef;
-  
+  @ViewChild("skySphere", { static: true }) skySphere: ElementRef;
+
   animation: Animation;
   constructor(
     private animationCtrl: AnimationController,
@@ -32,11 +32,24 @@ export class HomePage implements OnInit, AfterViewInit {
   oldPercentage: number = -20;
 
   theGreeting: string = "Good day";
+
+  time = new Date();
+
   ngOnInit() {
     console.log(this.theGreeting);
     this.calculateDayPercentage();
+    this.updateColorsByTime();
 
     interval(60000).subscribe((val) => this.everyMinute(val));
+
+
+
+
+    setInterval(() => {
+       
+      this.time = new Date();
+    }, 1000);
+
   }
 
   calculateDayPercentage() {
@@ -61,6 +74,7 @@ export class HomePage implements OnInit, AfterViewInit {
     this.calculateDayPercentage();
     this.updateDay();
     console.log("one minute has passed");
+    this.updateColorsByTime();
   }
 
   async ngAfterViewInit() {
@@ -101,7 +115,6 @@ export class HomePage implements OnInit, AfterViewInit {
       .iterations(1)
       .keyframes([
         { offset: 0, opacity: 1 },
-        { offset: 0.5, opacity: 1 },
         { offset: 1, opacity: 0 },
       ]);
 
@@ -149,7 +162,7 @@ export class HomePage implements OnInit, AfterViewInit {
         { offset: 1, background: "rgb(64,196,255)" },
       ]);
 
-      const raiseTheSkySphere = this.animationCtrl
+    const raiseTheSkySphere = this.animationCtrl
       .create()
       .addElement(this.skySphere.nativeElement)
       .duration(7000)
@@ -158,16 +171,23 @@ export class HomePage implements OnInit, AfterViewInit {
         {
           offset: 0,
           opacity: 0,
+          transform: "scale(0)",
+          top: `20%`,
+          left: `${this.oldPercentage}%`,
+        },
+        {
+          offset: .8,
+          opacity: 0,
           transform: "scale(.5)",
           top: `20%`,
-          left: `${this.oldPercentage}%`
+          left: `${this.oldPercentage}%`,
         },
         {
           offset: 1,
           opacity: 1,
           transform: "scale(1)",
           top: `20px`,
-          left: `${this.dayPercentage}%`
+          left: `${this.dayPercentage}%`,
         },
       ]);
 
@@ -201,7 +221,17 @@ export class HomePage implements OnInit, AfterViewInit {
     updateDayMinute.play();
   }
 
-/*   changeGlowColor(color:string){
-   document.documentElement.style.setProperty('--dynamic-colour', color);
-} */
+  updateColorsByTime() {
+    if (this.dayPercentage < 50 && this.dayPercentage > 25) {
+      this.changeGlowColor("#3880ff");
+    } else if (this.dayPercentage > 75) {
+      this.changeGlowColor("#ff2277");
+    } else if (this.dayPercentage > 49 || this.dayPercentage < 76) {
+      this.changeGlowColor('#ffcb2200')
+    }
+  }
+
+  changeGlowColor(color: string) {
+    document.documentElement.style.setProperty("--ion-sunset-primary", color);
+  }
 }
