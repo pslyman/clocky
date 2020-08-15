@@ -1,10 +1,10 @@
 <ion-content #body [fullscreen]="true">
-  <div id="daddy" #daddy>
-    <div >
+  <div id="daddy" #daddy (click)="addMinute()">
+    <div>
       <strong id="container" #container>{{theGreeting}}</strong>
-      <strong id="dateTime" #dateTime>{{ time | date: 'hh:mm:ss a' }}</strong>
-      <div id="skySphere" #skySphere></div>
-      <div id="dayCurve" #dayCurve></div>
+      <strong id="dateTime" #dateTime>{{ time | date: 'hh:mm a' }}</strong>
+      <div id="skySphere" #skySphere [ngClass]="{'sunRays' : isDay, 'moonRays' : !isDay}"></div>
+      <div id="dayCurve" #dayCurve ></div>
     </div>
   </div>
 </ion-content>
