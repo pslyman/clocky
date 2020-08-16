@@ -8,22 +8,21 @@
   transform: translateY(-50%);
 }
 
+page-home {
+  .absent-header {
+       display: none;
+  }
+}
+
 #container strong {
   font-size: 20px;
   line-height: 26px;
-}
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
+  color: #ececec;
 }
 
 #container a {
   text-decoration: none;
+  
 }
 
 #daddy {
@@ -79,4 +78,5 @@
   text-align: center;
   opacity: 0;
   margin-top: 30px;
+  color: #ececec;
 }

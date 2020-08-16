@@ -6,8 +6,12 @@ import {
   ElementRef,
   AfterViewInit,
 } from "@angular/core";
-import { Animation, AnimationController } from "@ionic/angular";
+import { Animation, AnimationController, Platform } from "@ionic/angular";
 import { interval } from "rxjs";
+import { Insomnia } from "@ionic-native/insomnia/ngx";
+import { AndroidFullScreen } from "@ionic-native/android-full-screen/ngx";
+import { NavigationBar } from "@ionic-native/navigation-bar/ngx";
+import { StatusBar } from "@ionic-native/status-bar/ngx";
 
 @Component({
   selector: "app-home",
@@ -24,7 +28,11 @@ export class HomePage implements OnInit, AfterViewInit {
   animation: Animation;
   constructor(
     private animationCtrl: AnimationController,
-    private parentComponent: AppComponent
+    private insomnia: Insomnia,
+    private androidFullScreen: AndroidFullScreen,
+    private navigationBar: NavigationBar,
+    private statusBar: StatusBar,
+    private platform: Platform
   ) {}
 
   timeInMinutes: number;
@@ -42,6 +50,33 @@ export class HomePage implements OnInit, AfterViewInit {
   isDay = true;
 
   ngOnInit() {
+    this.androidFullScreen
+      .isImmersiveModeSupported()
+      .then(() => console.log("Immersive mode supported"))
+      .catch((err) => console.log(err));
+
+    this.insomnia.keepAwake().then(
+      () => console.log("success"),
+      () => console.log("error")
+    );
+
+    this.platform.ready().then(() => {
+      this.androidFullScreen
+        .isImmersiveModeSupported()
+        .then(() => console.log("Immersive mode supported"))
+        .catch((err) => console.log(err));
+
+      this.insomnia.keepAwake().then(
+        () => console.log("success"),
+        () => console.log("error")
+      );
+
+      this.statusBar.hide();
+    });
+
+    let autoHide: boolean = true;
+    this.navigationBar.setUp(autoHide);
+
     this.calculateDayPercentage();
     this.updateColorsByTime();
 
@@ -261,7 +296,7 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   addMinute() {
-/*     this.dayPercentage++;
+    /*     this.dayPercentage++;
     this.isDay = true;
 
     this.updateDay();
