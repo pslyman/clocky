@@ -32,7 +32,10 @@ export class HomePage implements OnInit, AfterViewInit {
   dayPercentage: number = 0;
   oldPercentage: number = -20;
 
-  theGreeting: string = "Good day";
+  clockPercentageAdjustment: number = 0;
+  oldClockPercentageAdjustment: number = 0;
+
+  theGreeting: string = "Good morning";
 
   time = new Date();
 
@@ -42,6 +45,20 @@ export class HomePage implements OnInit, AfterViewInit {
     this.calculateDayPercentage();
     this.updateColorsByTime();
 
+    var d = new Date();
+    this.timeInHours = d.getHours();
+    this.timeInHours = (this.timeInHours / 24) * 100;
+
+    if (this.timeInHours >= 0 && this.timeInHours <= 25) {
+      this.theGreeting = "Have a good night";
+    } else if (this.timeInHours >= 75 && this.timeInHours <= 100) {
+      this.theGreeting = "Good evening";
+    } else if (this.timeInHours >= 25 && this.timeInHours <= 50) {
+      this.theGreeting = "Good morning";
+    } else if (this.timeInHours >= 50 && this.timeInHours <= 75) {
+      this.theGreeting = "Good afternoon";
+    }
+
     interval(60000).subscribe((val) => this.everyMinute(val));
     setInterval(() => {
       this.time = new Date();
@@ -50,62 +67,47 @@ export class HomePage implements OnInit, AfterViewInit {
 
   calculateDayPercentage() {
     this.oldPercentage = this.dayPercentage;
+    this.oldClockPercentageAdjustment = this.clockPercentageAdjustment;
 
     var d = new Date();
     this.timeInMinutes = d.getMinutes();
     this.timeInHours = d.getHours();
-    console.log(this.timeInHours, this.timeInMinutes);
 
     let dayPercent = (this.timeInHours / 24) * 100;
-    console.log("dayPercent", dayPercent);
 
     let timePercent = (this.timeInMinutes / 60) * 10;
-    console.log("timePercent", timePercent);
 
     this.dayPercentage = Number((dayPercent + timePercent).toFixed(2));
-    console.log("Total day percentage =", this.dayPercentage);
 
-    if (this.dayPercentage >= 25 || this.dayPercentage < 75) {
-      let modifier: number;
-      modifier = ((this.dayPercentage - 25) * 100) / (75 - 25);
-      console.log("modifier = ", modifier);
-      this.dayPercentage = modifier;
+    if (this.dayPercentage > 80) {
+      this.clockPercentageAdjustment = this.dayPercentage - 30;
+    } else {
+      this.clockPercentageAdjustment = this.dayPercentage;
+    }
 
+    /* debugger */
+    /* this.dayPercentage = 90;
+    this.isDay = false; */
+
+    if (this.dayPercentage >= 25 && this.dayPercentage < 75) {
       this.isDay = true;
     } else {
       if (this.dayPercentage < 25) {
-        let modifier: number;
-        modifier = ((this.dayPercentage - 0) * 100) / (25 - 0);
-        console.log("modifier = ", modifier);
-        this.dayPercentage = modifier;
+        /* console.log("less than 25, day false"); */
 
         this.isDay = false;
       } else {
-        let modifier: number;
-        modifier = ((this.dayPercentage - 75) * 100) / (100 - 75);
-        console.log("modifier = ", modifier);
-        this.dayPercentage = modifier;
+        /* console.log("more than 25, day false"); */
 
         this.isDay = false;
       }
     }
-
-    /* Debugger */
-/*     this.dayPercentage = 78;
-    this.isDay = false; */
   }
 
   everyMinute(val) {
     this.calculateDayPercentage();
-    if ((this.dayPercentage = 75)) {
-      this.transitionToEvening();
-    } else if ((this.dayPercentage = 25)) {
-      this.turnToDay;
-    } else {
-      this.updateDayOrNight();
-    }
+    this.updateDay();
 
-    console.log("one minute has passed");
     this.updateColorsByTime();
   }
 
@@ -127,7 +129,7 @@ export class HomePage implements OnInit, AfterViewInit {
       .easing("ease-out")
       .iterations(1)
       .keyframes([
-        { offset: 0, background: "var(--ion-background-color)" },
+        { offset: 0, background: "black" },
         { offset: 1, background: "#121212" },
       ]);
 
@@ -158,25 +160,21 @@ export class HomePage implements OnInit, AfterViewInit {
 
     await postOpening.play();
 
-    if (this.isDay) {
-      this.turnToDay();
-    } else {
-      this.turnToEvening();
-    }
+    this.turnToDay();
   }
 
   turnToDay() {
     const dayCurveOpen = this.animationCtrl
       .create()
       .addElement(this.dayCurve.nativeElement)
-      .duration(10000)
+      .duration(7000)
       .easing("ease-out")
       .iterations(1)
       .keyframes([
         {
           offset: 0,
           opacity: 0,
-          transform: "scale(3)",
+          transform: "scale(1)",
           top: `${this.oldPercentage}%`,
         },
         {
@@ -195,13 +193,13 @@ export class HomePage implements OnInit, AfterViewInit {
       .iterations(1)
       .keyframes([
         { offset: 0, background: "#121212" },
-        { offset: 1, background: "rgb(64,196,255)" },
+        { offset: 1, background: "var(--ion-custom-background-primary)" },
       ]);
 
     const raiseTheSkySphere = this.animationCtrl
       .create()
       .addElement(this.skySphere.nativeElement)
-      .duration(7000)
+      .duration(5000)
       .easing("ease-out")
       .keyframes([
         {
@@ -238,197 +236,13 @@ export class HomePage implements OnInit, AfterViewInit {
           offset: 0,
           opacity: 0,
           transform: "scale(3)",
-          top: `${this.oldPercentage}%`,
+          top: `${this.oldClockPercentageAdjustment}%`,
         },
         {
           offset: 1,
           opacity: 1,
           transform: "scale(1)",
-          top: `${this.dayPercentage}%`,
-        },
-      ]);
-
-    const turnToDaySequence = this.animationCtrl
-      .create()
-      .duration(10000)
-      .iterations(1)
-      .addAnimation([
-        dayCurveOpen,
-        backgroundToDay,
-        raiseTheSkySphere,
-        clockAppear,
-      ]);
-
-    turnToDaySequence.play();
-  }
-
-  transitionToEvening() {
-    const dayCurveOpen = this.animationCtrl
-      .create()
-      .addElement(this.dayCurve.nativeElement)
-      .duration(10000)
-      .easing("ease-out")
-      .iterations(1)
-      .keyframes([
-        {
-          offset: 0,
-          opacity: 1,
-          transform: "scale(1)",
-          bottom: `${this.oldPercentage}%`,
-          background: "rgb(64,196,255)",
-        },
-        {
-          offset: 1,
-          opacity: 0,
-          transform: "scale(3)",
-          bottom: `${this.dayPercentage}%`,
-          background: "black",
-        },
-      ]);
-
-    const backgroundToDay = this.animationCtrl
-      .create()
-      .addElement(this.daddy.nativeElement)
-      .duration(7500)
-      .easing("ease-out")
-      .iterations(1)
-      .keyframes([
-        { offset: 0, background: "rgb(64,196,255)" },
-        { offset: 1, background: "black" },
-      ]);
-
-    const raiseTheSkySphere = this.animationCtrl
-      .create()
-      .addElement(this.skySphere.nativeElement)
-      .duration(7000)
-      .easing("ease-out")
-      .keyframes([
-        {
-          offset: 0,
-          opacity: 0,
-          top: `20%`,
-          left: `${this.oldPercentage}%`,
-          background: "#ffe89e",
-        },
-        {
-          offset: 1,
-          opacity: 1,
-          top: `${this.dayPercentage}%`,
-          left: `50%`,
-          background: "grey",
-        },
-      ]);
-
-    const clockAppear = this.animationCtrl
-      .create()
-      .addElement(this.dateTime.nativeElement)
-      .duration(5000)
-      .easing("ease-out")
-      .iterations(1)
-      .keyframes([
-        {
-          offset: 0,
-          opacity: 0,
-          transform: "scale(3)",
-          top: `${this.oldPercentage}%`,
-        },
-        {
-          offset: 1,
-          opacity: 1,
-          transform: "scale(1)",
-          top: `${this.dayPercentage}%`,
-        },
-      ]);
-
-    const turnToDaySequence = this.animationCtrl
-      .create()
-      .duration(10000)
-      .iterations(1)
-      .addAnimation([
-        dayCurveOpen,
-        backgroundToDay,
-        raiseTheSkySphere,
-        clockAppear,
-      ]);
-
-    turnToDaySequence.play();
-  }
-
-  turnToEvening() {
-    const dayCurveOpen = this.animationCtrl
-      .create()
-      .addElement(this.dayCurve.nativeElement)
-      .duration(10000)
-      .easing("ease-out")
-      .iterations(1)
-      .keyframes([
-        {
-          offset: 0,
-          opacity: 0,
-          transform: "scale(1)",
-          bottom: `${this.oldPercentage}%`,
-          background: "black",
-        },
-        {
-          offset: 1,
-          opacity: 0,
-          transform: "scale(3)",
-          bottom: `${this.dayPercentage}%`,
-          background: "black",
-        },
-      ]);
-
-    const backgroundToDay = this.animationCtrl
-      .create()
-      .addElement(this.daddy.nativeElement)
-      .duration(7500)
-      .easing("ease-out")
-      .iterations(1)
-      .keyframes([
-        { offset: 0, background: "black" },
-        { offset: 1, background: "black" },
-      ]);
-
-    const raiseTheSkySphere = this.animationCtrl
-      .create()
-      .addElement(this.skySphere.nativeElement)
-      .duration(7000)
-      .easing("ease-out")
-      .keyframes([
-        {
-          offset: 0,
-          opacity: 0,
-          top: `20%`,
-          left: `${this.oldPercentage}%`,
-          background: "#ffe89e",
-        },
-        {
-          offset: 1,
-          opacity: 1,
-          top: `${this.dayPercentage}%`,
-          left: `50%`,
-          background: "grey",
-        },
-      ]);
-
-    const clockAppear = this.animationCtrl
-      .create()
-      .addElement(this.dateTime.nativeElement)
-      .duration(5000)
-      .easing("ease-out")
-      .iterations(1)
-      .keyframes([
-        {
-          offset: 0,
-          opacity: 0,
-          transform: "scale(3)",
-          top: `${this.oldPercentage}%`,
-        },
-        {
-          offset: 1,
-          opacity: 1,
-          transform: "scale(1)",
-          top: `${this.dayPercentage}%`,
+          top: `${this.clockPercentageAdjustment}%`,
         },
       ]);
 
@@ -447,21 +261,11 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   addMinute() {
-    this.dayPercentage++;
-    console.log("dayPercentage now ", this.dayPercentage);
+/*     this.dayPercentage++;
+    this.isDay = true;
 
-    this.updateDayOrNight();
-    this.updateColorsByTime();
-  }
-
-  updateDayOrNight() {
-    if (this.isDay) {
-      this.updateDay();
-      console.log("updateDay");
-    } else {
-      this.updateNight();
-      console.log("updateNight");
-    }
+    this.updateDay();
+    this.updateColorsByTime(); */
   }
 
   updateDay() {
@@ -502,11 +306,11 @@ export class HomePage implements OnInit, AfterViewInit {
       .keyframes([
         {
           offset: 0,
-          top: `${this.oldPercentage}%`,
+          top: `${this.oldClockPercentageAdjustment}%`,
         },
         {
           offset: 1,
-          top: `${this.dayPercentage}%`,
+          top: `${this.clockPercentageAdjustment}%`,
         },
       ]);
 
@@ -519,61 +323,54 @@ export class HomePage implements OnInit, AfterViewInit {
     updateDayMinute.play();
   }
 
-  updateNight() {
-    const updateSkySphere = this.animationCtrl
-      .create()
-      .addElement(this.skySphere.nativeElement)
-      .duration(7000)
-      .easing("ease-out")
-      .keyframes([
-        {
-          offset: 0,
-          top: `${this.oldPercentage}%`,
-        },
-
-        {
-          offset: 1,
-          top: `${this.dayPercentage}%`,
-        },
-      ]);
-
-    const updateClockPosition = this.animationCtrl
-      .create()
-      .addElement(this.dateTime.nativeElement)
-      .duration(5000)
-      .easing("ease-out")
-      .iterations(1)
-      .keyframes([
-        {
-          offset: 0,
-          bottom: `${this.oldPercentage}%`,
-        },
-        {
-          offset: 1,
-          bottom: `${this.dayPercentage}%`,
-        },
-      ]);
-
-    const updateNightMinute = this.animationCtrl
-      .create()
-      .duration(10000)
-      .iterations(1)
-      .addAnimation([updateSkySphere, updateClockPosition]);
-
-    updateNightMinute.play();
-  }
-
   updateColorsByTime() {
-    if (this.dayPercentage < 64 && this.dayPercentage > 25) {
-      this.changeGlowColor("#3880ff");
-    } else if (this.dayPercentage > 75) {
-      this.changeGlowColor("#ffcb2200");
-    } else if (this.dayPercentage > 65 || this.dayPercentage < 76) {
-      this.changeGlowColor("#ff2277");
+    if (this.dayPercentage < 65 && this.dayPercentage > 25) {
+      /* day */
+      this.changeGlowColor("--ion-sunset-primary", "#3880ff");
+      this.changeGlowColor("--ion-sphere-primary", "#ffe89e");
+      this.changeGlowColor("--ion-sphere-rays-primary", "#ffca22");
+      this.changeGlowColor(
+        "--ion-custom-background-primary",
+        "rgb(64,196,255)"
+      );
+      this.changeGlowColor("--ion-curve-primary", "#42d77d");
+      this.changeGlowColor("--ion-curve-border-primary", "rgb(0, 109, 98)");
+    } else if (this.dayPercentage > 65 && this.dayPercentage < 75) {
+      /* sunset */
+      this.changeGlowColor("--ion-sunset-primary", "#ff2277");
+      this.changeGlowColor("--ion-sphere-primary", "#ffe89e");
+      this.changeGlowColor("--ion-sphere-rays-primary", "#ffca22");
+      this.changeGlowColor("--ion-custom-background-primary", "#1070be");
+      this.changeGlowColor("--ion-curve-primary", "#42d77d");
+      this.changeGlowColor("--ion-curve-border-primary", "rgb(0, 109, 98)");
+    } else if (this.dayPercentage > 75 && this.dayPercentage < 101) {
+      /* evening */
+      this.changeGlowColor("--ion-sunset-primary", "#ffcb2200");
+      this.changeGlowColor("--ion-sphere-primary", "#101010");
+      this.changeGlowColor("--ion-sphere-rays-primary", "#080808");
+      this.changeGlowColor("--ion-custom-background-primary", "black");
+      this.changeGlowColor("--ion-curve-primary", "#101010");
+      this.changeGlowColor("--ion-curve-border-primary", "#080808");
+    } else if (this.dayPercentage > 0 && this.dayPercentage < 15) {
+      /* evening still but smaller section */
+      this.changeGlowColor("--ion-sunset-primary", "#ffcb2200");
+      this.changeGlowColor("--ion-sphere-primary", "#101010");
+      this.changeGlowColor("--ion-sphere-rays-primary", "#080808");
+      this.changeGlowColor("--ion-custom-background-primary", "black");
+      this.changeGlowColor("--ion-curve-primary", "#101010");
+      this.changeGlowColor("--ion-curve-border-primary", "#080808");
+    } else if (this.dayPercentage > 15 && this.dayPercentage < 25) {
+      /* sunrise */
+      this.changeGlowColor("--ion-sunset-primary", "#ff2277");
+      this.changeGlowColor("--ion-sphere-primary", "#ffe89e");
+      this.changeGlowColor("--ion-sphere-rays-primary", "#ffca22");
+      this.changeGlowColor("--ion-custom-background-primary", "#94c2e7");
+      this.changeGlowColor("--ion-curve-primary", "#42d77d");
+      this.changeGlowColor("--ion-curve-border-primary", "rgb(0, 109, 98)");
     }
   }
 
-  changeGlowColor(color: string) {
-    document.documentElement.style.setProperty("--ion-sunset-primary", color);
+  changeGlowColor(property: string, color: string) {
+    document.documentElement.style.setProperty(property, color);
   }
 }

@@ -41,9 +41,9 @@
   bottom: 0;
   background-color: rgb(0, 150, 136);
   opacity: 0;
-  border-top: rgb(0, 109, 98) 8px solid;
+  border-top: var(--ion-curve-border-primary) 8px solid;
   box-shadow: 0 0 100px 100px var(--ion-sunset-primary);
-  background: linear-gradient(25deg, #000000, #42d77d);
+  background: linear-gradient(25deg, #000000, var(--ion-curve-border-primary));
 }
 
 #skySphere {
@@ -51,21 +51,24 @@
   position: absolute;
   width: 40%;
   height: calc(40vw);
-  background-color: #ffe89e;
+
   border-radius: 50%;
 
   margin-left: -20%;
+
+  box-shadow: 0 0 100px 100px var(--ion-sphere-rays-primary);
+  background-color: var(--ion-sphere-primary);
 }
 
-.sunRays {
+/* .sunRays {
   box-shadow: 0 0 100px 100px #ffca22;
-  transition: box-shadow 0.3s ease-in-out;
+  background-color: #ffe89e;
 }
 
 .moonRays {
   box-shadow: 0 0 100px 100px grey;
-  transition: box-shadow 0.3s ease-in-out;
-}
+  background-color: grey;
+} */
 
 #dateTime {
   font-size: xxx-large;
