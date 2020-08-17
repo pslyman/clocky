@@ -12,6 +12,8 @@ import { Insomnia } from "@ionic-native/insomnia/ngx";
 import { AndroidFullScreen } from "@ionic-native/android-full-screen/ngx";
 import { NavigationBar } from "@ionic-native/navigation-bar/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
+import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx';
+
 
 @Component({
   selector: "app-home",
@@ -32,7 +34,8 @@ export class HomePage implements OnInit, AfterViewInit {
     private androidFullScreen: AndroidFullScreen,
     private navigationBar: NavigationBar,
     private statusBar: StatusBar,
-    private platform: Platform
+    private platform: Platform,
+    private mobileAccessibility: MobileAccessibility
   ) {}
 
   timeInMinutes: number;
@@ -72,6 +75,7 @@ export class HomePage implements OnInit, AfterViewInit {
       );
 
       this.statusBar.hide();
+      this.mobileAccessibility.usePreferredTextZoom(false);
     });
 
     let autoHide: boolean = true;
@@ -160,7 +164,7 @@ export class HomePage implements OnInit, AfterViewInit {
     const backgroundAnimation = this.animationCtrl
       .create()
       .addElement(this.daddy.nativeElement)
-      .duration(3000)
+      .duration(2000)
       .easing("ease-out")
       .iterations(1)
       .keyframes([
@@ -170,7 +174,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
     const opening = this.animationCtrl
       .create()
-      .duration(3000)
+      .duration(2000)
       .iterations(1)
       .addAnimation([greetingAnimation, backgroundAnimation]);
 
@@ -179,7 +183,7 @@ export class HomePage implements OnInit, AfterViewInit {
     const greetingAnimationGoodbye = this.animationCtrl
       .create()
       .addElement(this.container.nativeElement)
-      .duration(3000)
+      .duration(1000)
       .easing("ease-out")
       .iterations(1)
       .keyframes([
@@ -189,7 +193,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
     const postOpening = this.animationCtrl
       .create()
-      .duration(5000)
+      .duration(1000)
       .iterations(1)
       .addAnimation([greetingAnimationGoodbye]);
 
@@ -295,14 +299,6 @@ export class HomePage implements OnInit, AfterViewInit {
     turnToDaySequence.play();
   }
 
-  addMinute() {
-    /*     this.dayPercentage++;
-    this.isDay = true;
-
-    this.updateDay();
-    this.updateColorsByTime(); */
-  }
-
   updateDay() {
     const dayCurveOpen = this.animationCtrl
       .create()
@@ -359,7 +355,7 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   updateColorsByTime() {
-    if (this.dayPercentage < 65 && this.dayPercentage > 25) {
+    if (this.dayPercentage < 80 && this.dayPercentage > 25) {
       /* day */
       this.changeGlowColor("--ion-sunset-primary", "#3880ff");
       this.changeGlowColor("--ion-sphere-primary", "#ffe89e");
@@ -370,7 +366,7 @@ export class HomePage implements OnInit, AfterViewInit {
       );
       this.changeGlowColor("--ion-curve-primary", "#42d77d");
       this.changeGlowColor("--ion-curve-border-primary", "rgb(0, 109, 98)");
-    } else if (this.dayPercentage > 65 && this.dayPercentage < 75) {
+    } else if (this.dayPercentage > 80 && this.dayPercentage < 85) {
       /* sunset */
       this.changeGlowColor("--ion-sunset-primary", "#ff2277");
       this.changeGlowColor("--ion-sphere-primary", "#ffe89e");
@@ -378,22 +374,22 @@ export class HomePage implements OnInit, AfterViewInit {
       this.changeGlowColor("--ion-custom-background-primary", "#1070be");
       this.changeGlowColor("--ion-curve-primary", "#42d77d");
       this.changeGlowColor("--ion-curve-border-primary", "rgb(0, 109, 98)");
-    } else if (this.dayPercentage > 75 && this.dayPercentage < 101) {
+    } else if (this.dayPercentage > 85 && this.dayPercentage < 101) {
       /* evening */
       this.changeGlowColor("--ion-sunset-primary", "#ffcb2200");
-      this.changeGlowColor("--ion-sphere-primary", "#101010");
-      this.changeGlowColor("--ion-sphere-rays-primary", "#080808");
+      this.changeGlowColor("--ion-sphere-primary", "#383838");
+      this.changeGlowColor("--ion-sphere-rays-primary", "#101010");
       this.changeGlowColor("--ion-custom-background-primary", "black");
-      this.changeGlowColor("--ion-curve-primary", "#101010");
-      this.changeGlowColor("--ion-curve-border-primary", "#080808");
+      this.changeGlowColor("--ion-curve-primary", "#383838");
+      this.changeGlowColor("--ion-curve-border-primary", "#101010");
     } else if (this.dayPercentage > 0 && this.dayPercentage < 15) {
       /* evening still but smaller section */
       this.changeGlowColor("--ion-sunset-primary", "#ffcb2200");
-      this.changeGlowColor("--ion-sphere-primary", "#101010");
-      this.changeGlowColor("--ion-sphere-rays-primary", "#080808");
+      this.changeGlowColor("--ion-sphere-primary", "#383838");
+      this.changeGlowColor("--ion-sphere-rays-primary", "#101010");
       this.changeGlowColor("--ion-custom-background-primary", "black");
-      this.changeGlowColor("--ion-curve-primary", "#101010");
-      this.changeGlowColor("--ion-curve-border-primary", "#080808");
+      this.changeGlowColor("--ion-curve-primary", "#383838");
+      this.changeGlowColor("--ion-curve-border-primary", "#101010");
     } else if (this.dayPercentage > 15 && this.dayPercentage < 25) {
       /* sunrise */
       this.changeGlowColor("--ion-sunset-primary", "#ff2277");

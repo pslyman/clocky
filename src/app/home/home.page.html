@@ -1,12 +1,13 @@
 <ion-header class="absent-header"></ion-header>
 
 <ion-content #body [fullscreen]="true" [scrollY]="false">
-  <div id="daddy" #daddy (click)="addMinute()">
+  <div id="daddy" #daddy>
     <div>
       <strong id="container" #container>{{theGreeting}}</strong>
-      <strong id="dateTime" #dateTime>{{ time | date: 'hh:mm a' }}</strong>
+      <strong id="dateTime" #dateTime>{{ time | date: 'hh:mm:ss a' }}</strong>
       <div id="skySphere" #skySphere></div>
       <div id="dayCurve" #dayCurve></div>
+      <div class="star-daddy" *ngIf="!isDay"></div>
     </div>
   </div>
 </ion-content>

@@ -59,16 +59,6 @@ page-home {
   background-color: var(--ion-sphere-primary);
 }
 
-/* .sunRays {
-  box-shadow: 0 0 100px 100px #ffca22;
-  background-color: #ffe89e;
-}
-
-.moonRays {
-  box-shadow: 0 0 100px 100px grey;
-  background-color: grey;
-} */
-
 #dateTime {
   font-size: xxx-large;
   position: absolute;
@@ -79,4 +69,57 @@ page-home {
   opacity: 0;
   margin-top: 30px;
   color: #ececec;
+}
+
+.star-daddy {
+  width: 100vw;
+  height: 100vh;
+}
+
+.star-daddy {
+  background-color: black;
+
+  background-image:
+      -webkit-gradient(radial, 50% 50%, 2, 50% 50%, 40, from(white), color-stop(0.1, black), to(transparent)),
+      -webkit-gradient(radial, 50% 50%, 1, 50% 50%, 30, from(white), color-stop(0.1, black), to(transparent)),
+      -webkit-gradient(radial, 50% 50%, 1, 50% 50%, 40, from(white), color-stop(0.05, black), to(transparent)),
+      -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 30, from(white), color-stop(0.03, black), to(transparent));
+
+  /* Background Attributes */
+  background-size: 550px 550px, 350px 350px, 250px 270px, 220px 200px;
+  background-position: 0 0, 30px 60px, 130px 270px, 70px 150px;
+
+  /* Animation */
+  animation-name: movement;
+  animation-duration: 40s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+
+}
+@keyframes movement
+{
+  from {
+          background-position: 0 0, 30px 60px, 130px 270px, 70px 150px;
+  }
+  to {
+          background-position: -550px 0, -320px 60px, -120px 270px, -150px 150px;
+  }
+}
+@-moz-keyframes movement
+{
+  from {
+          background-position: 0 0, 30px 60px, 130px 270px, 70px 150px;
+  }
+  to {
+          background-position: -550px 0, -320px 60px, -120px 270px, -150px 150px;
+  }
+}
+@-webkit-keyframes movement
+{
+  from {
+          background-position: 0 0, 30px 60px, 130px 270px, 70px 150px;
+  }
+  to {
+          background-position: -550px 0, -320px 60px, -120px 270px, -150px 150px;
+  }
 }

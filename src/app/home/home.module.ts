@@ -9,7 +9,7 @@ import { HomePage } from './home.page';
 import { HomePageRoutingModule } from './home-routing.module';
 import { NavigationBar } from '@ionic-native/navigation-bar/ngx';
 import { StatusBar} from '@ionic-native/status-bar/ngx';
-
+import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx';
 
 @NgModule({
   imports: [
@@ -18,7 +18,7 @@ import { StatusBar} from '@ionic-native/status-bar/ngx';
     IonicModule,
     HomePageRoutingModule
   ],
-  providers: [Insomnia, AndroidFullScreen, NavigationBar, StatusBar],
+  providers: [Insomnia, AndroidFullScreen, NavigationBar, StatusBar, MobileAccessibility],
   declarations: [HomePage]
 })
 export class HomePageModule {}
