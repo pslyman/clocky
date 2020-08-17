@@ -125,7 +125,7 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     /* debugger */
-    /* this.dayPercentage = 90;
+    /* this.dayPercentage = 87;
     this.isDay = false; */
 
     if (this.dayPercentage >= 25 && this.dayPercentage < 75) {
