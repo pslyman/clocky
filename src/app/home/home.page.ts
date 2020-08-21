@@ -12,8 +12,7 @@ import { Insomnia } from "@ionic-native/insomnia/ngx";
 import { AndroidFullScreen } from "@ionic-native/android-full-screen/ngx";
 import { NavigationBar } from "@ionic-native/navigation-bar/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
-import { MobileAccessibility } from '@ionic-native/mobile-accessibility/ngx';
-
+import { MobileAccessibility } from "@ionic-native/mobile-accessibility/ngx";
 
 @Component({
   selector: "app-home",
@@ -128,19 +127,12 @@ export class HomePage implements OnInit, AfterViewInit {
     /* this.dayPercentage = 87;
     this.isDay = false; */
 
-    if (this.dayPercentage >= 25 && this.dayPercentage < 75) {
+    if (this.dayPercentage >= 15 && this.dayPercentage <= 85) {
       this.isDay = true;
     } else {
-      if (this.dayPercentage < 25) {
-        /* console.log("less than 25, day false"); */
-
-        this.isDay = false;
-      } else {
-        /* console.log("more than 25, day false"); */
-
-        this.isDay = false;
-      }
+      this.isDay = false;
     }
+    /* console.log("more than 25, day false"); */
   }
 
   everyMinute(val) {
